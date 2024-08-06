@@ -6,6 +6,11 @@ clear all
 cd "F:\Research 2023-24\China cofinancing and DE\data and code"
 use DE2019.dta
 xtset ID YEAR
+**Install all packge required to perform the analysis. reghdfe is a Stata package designed for conducting linear and instrumental-variable regressions with multiple levels of fixed effects. 
+**It implements the estimator proposed by Correia (2015), allowing for efficient handling of complex models involving numerous fixed effects. 
+ssc install reghdfe 
+
+
 
 gen log_CCF=ln(CCF)
 replace log_CCF=0 if missing(log_CCF)
