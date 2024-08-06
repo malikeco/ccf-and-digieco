@@ -123,27 +123,23 @@ est store g5
 esttab g1 g2 g3 g4 g5 using Table5-Robust_MMQREG.rtf, replace b(%6.3f) t(%6.2f) star(* 0.10 ** 0.05 *** 0.01) nogap
 
 
+
 *--//Table 6 -  Moderating role of the  AI
 ****
+egen ave_log_CCF=mean(log_CCF)
+gen dc_log_CCF=log_CCF-ave_log_CCF
+gen log_AI_install=ln(AI_INSTAL)
+replace log_AI_install =0 if missing(log_AI_install)
+egen ave_AI=mean(log_AI_install)
+gen dc_AI=log_AI_install-ave_AI
+gen CCF_AI=dc_log_CCF*dc_AI
 
-
-gen CCF_AI=log_CCF*log_AI_stock
-
-reghdfe digieco log_CCF CCF_AI , absorb(ID) 
-est store h1
-reghdfe digieco log_CCF  CCF_AI log_URP, absorb(ID)   
-est store h2
-reghdfe digieco log_CCF  CCF_AI log_URP log_FDI, absorb(ID)  
-est store h3 
-reghdfe digieco log_CCF  CCF_AI log_URP log_FDI  log_ET, absorb(ID)
-est store h4 
-reghdfe digieco log_CCF CCF_AI log_URP log_FDI  log_ET log_GDP, absorb(ID)  
-est store h5
-reghdfe digieco log_CF log_NCF CCF_AI log_URP log_FDI  log_GDP log_ET, absorb(ID)
-est store h6
-esttab h?, b(%6.3f) t(%6.2f) r2 ar2 star(* 0.10 ** 0.05 *** 0.01) obslast compress nogap 
-esttab h? using Table6-Moderating_Role_AI.rtf, replace b(%6.3f) t(%6.2f) r2 ar2 star(* 0.1 ** 0.05 *** 0.01) nogap
-
+reghdfe digieco dc_log_CCF CCF_AI log_AI_install log_URP log_FDI  log_ET log_GDP, absorb(ID) 
+est store g1 
+reghdfe digieco log_CF log_NCF CCF_AI log_AI_install log_URP log_FDI  log_ET log_GDP, absorb(ID)  
+est store g2
+esttab g?, b(%6.3f) t(%6.2f) r2 ar2 star(* 0.10 ** 0.05 *** 0.01) obslast compress nogap 
+esttab g? using Table6-Moderating_Role_AI.rtf, replace b(%6.3f) t(%6.2f) r2 ar2 star(* 0.1 ** 0.05 *** 0.01) nogap
 ************************************************************************************************************
  
 
